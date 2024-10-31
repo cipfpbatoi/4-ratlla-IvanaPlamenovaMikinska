@@ -2,6 +2,11 @@
 
 namespace Joc4enRatlla\Models;
 
+use Joc4enRatlla\Exceptions\ColumnFullException;
+
+/**
+ * Representación del tablero del juego '4 en Ratlla'
+ */
 class Board
 {
     public const FILES = 6;
@@ -13,43 +18,76 @@ class Board
         [1, -1]   // Diagonal abajo-izquierda
     ];
 
+    /**
+     * @var array $slots Matriz de posiciones del tablero
+     */
     private array $slots; // graella
 
+
+    /**
+     * Constructor que inicializa el tablero vacío.
+     */
     public function __construct()
     {
         // TODO: Ha d'inicializar $slots
         $this->slots = $this->initializeBoard();
-        
     }
 
     // TODO: Getters i Setters 
 
+    /**
+     * Obtiene las posiciones del tablero.
+     * 
+     * @return array Matriz de posiciones
+     */
     public function getSlots()
     {
         return $this->slots;
     }
 
+    /**
+     * Inicializa la matriz del tablero con valores vacíos.
+     * 
+     * @return array Tablero inicializado
+     */
     private static function initializeBoard(): array
     {
         // TODO: Inicialitza la graella amb valors buits
         return array_fill(1, self::FILES, array_fill(1, self::COLUMNS, 0));
-        
     }
 
 
+    /**
+     * Realiza un movimiento en el tablero.
+     * 
+     * @param int $column Columna seleccionada
+     * @param int $player Jugador que realiza el movimiento
+     * @return array Coordenadas del movimiento realizado
+     */
     public function setMovementOnBoard(int $column, int $player): array
     {
         // TODO: Realitza un moviment en la graella
-        for ($i = self::FILES ; $i > 0; $i--) {
+        try{
+            for ($i = self::FILES; $i > 0; $i--) {
             if ($this->slots[$i][$column] === 0) {
                 $this->slots[$i][$column] = $player;
                 return [$i, $column];
             }
         }
         return [-1, -1];
+        } catch (ColumnFullException $e) {
+            $e->getMessage();
+        }
+        
     }
 
 
+    /**
+     * Verifica si hay un ganador en el tablero.
+     * 
+     * @param array $coord Coordenadas del último movimiento
+     * @return bool true si hay un ganador, false en caso contrario
+     */
     public function checkWin(array $coord): bool
     {
         // TODO: Comprova si hi ha un guanyador
@@ -75,6 +113,12 @@ class Board
     }
 
 
+    /**
+     * Verifica si un movimiento en una columna es válido.
+     * 
+     * @param int $column Columna seleccionada
+     * @return bool true si el movimiento es válido, false en caso contrario
+     */
     public function isValidMove(int $column): bool
     {
         // TODO: Comprova si el moviment és vàlid
@@ -82,12 +126,17 @@ class Board
     }
 
 
+    /**
+     * Verifica si el tablero está lleno.
+     * 
+     * @return bool true si el tablero está lleno, false en caso contrario
+     */
     public function isFull(): bool
     {
         // TODO: El tauler està ple?
-        foreach($this->slots[0] as $cell) {
-            if($cell === 0) 
-            return false;
+        foreach ($this->slots[0] as $cell) {
+            if ($cell === 0)
+                return false;
         }
         return true;
     }

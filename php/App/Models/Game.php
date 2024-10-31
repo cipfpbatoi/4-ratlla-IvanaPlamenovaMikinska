@@ -5,6 +5,9 @@ namespace Joc4enRatlla\Models;
 use Joc4enRatlla\Models\Board;
 use Joc4enRatlla\Models\Player;
 
+/**
+ * La clase Game representa una partida de 4 en Ratlla.
+ */
 class Game
 {
     private Board $board;
@@ -13,6 +16,12 @@ class Game
     private ?Player $winner;
     private array $scores;
 
+    /**
+     * Inicia una nueva partida.
+     *
+     * @param Player $player1 Jugador 1.
+     * @param Player $player2 Jugador 2.
+     */
     public function __construct(Player $jugador1, Player $jugador2)
     {
         // TODO: S'han d'inicialitzar les variables tenint en compte que el array de jugador ha de començar amb l'index 1 
@@ -106,10 +115,10 @@ class Game
     public function play($columna)
     {
         // TODO: Realitza un moviment
-        if($this->board->isValidMove($columna)) {
+        if ($this->board->isValidMove($columna)) {
             $coordenadas = $this->board->setMovementOnBoard($columna, $this->nextPlayer);
 
-            if($this->board->checkWin($coordenadas)) {
+            if ($this->board->checkWin($coordenadas)) {
                 $this->winner = $this->players[$this->nextPlayer];
             }
 
@@ -174,6 +183,6 @@ class Game
     public static function restore()
     {
         // TODO: Restaura l'estat del joc de les sessions
-        return unserialize($_SESSION['game'],[Game::class]) ?? null;
+        return unserialize($_SESSION['game'], [Game::class]) ?? null;
     }
 }

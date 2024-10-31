@@ -2,13 +2,22 @@
 
 namespace Joc4enRatlla\Models;
 
-
+/**
+ * Representa a un jugador del juego '4 en Ratlla'
+ */
 class Player
 {
     private $name;      // Nom del jugador
     private $color;     // Color de les fitxes
     private $isAutomatic; // Forma de jugar (automàtica/manual)
 
+
+    /**
+     * Constructor del jugador.
+     * 
+     * @param string $name Nombre del jugador
+     * @param string $color Color del jugador
+     */
     public function __construct($name, $color, $isAutomatic = false)
     {
         // TODO: Inicialitzar variables 
