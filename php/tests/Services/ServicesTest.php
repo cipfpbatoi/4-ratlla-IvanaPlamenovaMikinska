@@ -3,7 +3,7 @@
 use Joc4enRatlla\Services\Service;
 use PHPUnit\Framework\TestCase;
 
-class ServiceTest extends TestCase
+class ServicesTest extends TestCase
 {
     protected function setUp(): void
     {
