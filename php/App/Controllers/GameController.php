@@ -53,6 +53,12 @@ class GameController
     {
         // TODO : Gestió del joc. Ací es on s'ha de vore si hi ha guanyador, si el que juga es automàtic  o manual, s'ha polsat reiniciar...
 
+        if (!isset($_SESSION['usuari_id'])) {
+            Service::loadView('login');
+            return;
+        }
+
+
         if (isset($request['columna'])) {
             $column = (int) $request['columna'];
             $this->game->play($column);
@@ -66,9 +72,18 @@ class GameController
             $this->game->save();
         }
 
+        if (isset($request['save'])) {
+            $this->game->saveToDatabase($_SESSION['usuari_id']);
+        }
+
+        if (isset($request['load'])) {
+            $this->game = Game::loadFromDatabase($_SESSION['usuari_id']);
+            $this->game->save();
+        }
+
         if (isset($request['exit'])) {
             session_destroy();
-            Service::loadView('jugador');
+            Service::loadView('login');
             return;
         }
 

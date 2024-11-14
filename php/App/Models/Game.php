@@ -4,6 +4,8 @@ namespace Joc4enRatlla\Models;
 
 use Joc4enRatlla\Models\Board;
 use Joc4enRatlla\Models\Player;
+use Joc4enRatlla\Services\Database;
+use PDO;
 
 /**
  * La clase Game representa una partida de 4 en Ratlla.
@@ -184,5 +186,44 @@ class Game
     {
         // TODO: Restaura l'estat del joc de les sessions
         return unserialize($_SESSION['game'], [Game::class]) ?? null;
+    }
+
+    public function saveToDatabase($userId)
+    {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $gameData = [
+            'estado_partida' => serialize($this->board),
+            'scores' => $this->scores
+        ];
+    
+        $gameJson = serialize($this);
+    
+        $stmt = $conn->prepare(
+            "INSERT INTO partides (usuari_id, game) VALUES (:usuari_id, :game)
+            ON DUPLICATE KEY UPDATE game = :game"
+        );
+        $stmt->bindParam(':usuari_id', $userId);
+        $stmt->bindParam(':game', $gameJson);
+    
+        $stmt->execute();
+    }
+
+    public static function loadFromDatabase($userId)
+    {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT game FROM partides WHERE usuari_id = :usuari_id");
+        $stmt->bindParam(':usuari_id', $userId);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            return unserialize($result['game'], [Game::class]);
+        }
+
+        return null;
     }
 }

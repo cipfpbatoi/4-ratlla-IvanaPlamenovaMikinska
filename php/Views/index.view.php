@@ -24,6 +24,8 @@
         <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/../Views/partials/board.view.php'  ?>
         <input type="submit" name="reset" value="Reiniciar joc">
         <input type="submit" name="exit" value="Acabar joc">
+        <input type="submit" name="save" value="Guardar Partida">
+        <input type="submit" name="load" value="Cargar Partida">
     </form>
     <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/../Views/partials/panel.view.php'  ?>
 </body>
